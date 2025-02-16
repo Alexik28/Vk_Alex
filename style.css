@@ -1,0 +1,89 @@
+.user-info {
+    border: 1px solid black;
+    padding: 20px;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.user-info img {
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.friends-list{
+    display: flex;
+    flex-direction: column;
+}
+
+.friend-card
+{
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 15px;
+    width: 150px;
+    text-align: center;
+}
+
+.friend-card img{
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.chat-window{
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 500px;
+    margin-top: 20px;
+    display: none;
+}
+
+
+.chat-history{
+    height: 800px;
+    overflow-y: auto;
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+}
+
+.chat-input{
+    display: flex;
+    align-items: center;
+}
+
+#message-input{
+    flex: 1;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+#send-button{
+    padding: 10px;
+    background-color:red;
+    color: black;
+    border: none;
+    border-radius: 5px;
+}
+
+.attachment{
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.attachment img{
+    max-width: 100%;
+    height: auto;
+}
+
+.attachment video{
+    max-width: 100%;
+    height: auto;
+}
+
+.attachment audio{
+    width: 100%;
+    max-width: 300px;
+    margin-top: 10px;
+}
