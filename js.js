@@ -175,34 +175,32 @@ function handleSendResponse(response) {
   }
 }
 
-function extractTokenFromUrl(){
-  const hash=window.location.hash.substring(1);
-  const params=new URLSearchParams(hash);
-
-  const accessToken=params.get('access_token');
-  const userId=params.get('user_id');
-
-  if(accessToken&&userId)
-  {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('userId', userId);
-    
-    loadUserInfo(accessToken, userId);
-  }
-}
-
-window.addEventListener('load',function(){
-  extractTokenFromUrl();
-});
-
 
 
 
 
 document.getElementById('auth-button').addEventListener('click',function()
 {
-  const authUrl = 'https://oauth.vk.com/authorize?client_id=6287487&scope=1073737727&redirect_uri=https://oauth.vk.com/blank.html&display=page&response_type=token&revoke=1';
-  window.open(authUrl,'VK Auth', 'width=500,height=600');
+  const authUrl = 'https://oauth.vk.com/authorize?client_id=6287487&scope=1073737727&redirect_uri=https://aesthetic-biscochitos-1d8967.netlify.app/blank.html&display=page&response_type=token&revoke=1';
+  const authWindow = window.open(authUrl,'VK Auth', 'width=500,height=600');
+  window.addEventListener('message', function(event){
+    
+    const accessToken=event.data.access_token;
+    const userId=event.data.user_id;
+
+    if(accessToken&&userId)
+    {
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('userId',userId);
+
+      authWindow.close();
+      console.log('Access Token', accessToken);
+      console.log('User ID:',userId);
+
+      loadUserInfo(accessToken,userId);
+      loadFriends(accessToken, userId);
+    }
+  });
 });
 
 function sendMessageWithAttachment(peerId, attachmentString) {
@@ -211,12 +209,14 @@ function sendMessageWithAttachment(peerId, attachmentString) {
   document.body.appendChild(script);
 }
 
+function loadUserInfo(accessToken, userId) {
+  const script = document.createElement('script');
+  script.src = `https://api.vk.com/method/users.get?user_ids=${userId}&access_token=${accessToken}&v=5.131&fields=photo_200,domain&callback=handleResponse`;
+  document.body.appendChild(script);
+}
 
-const userScript = document.createElement('script');
-userScript.src = `https://api.vk.com/method/users.get?user_ids=${userId}&access_token=${accessToken}&v=5.131&fields=photo_200,domain&callback=handleResponse`;
-document.body.appendChild(userScript);
-
-const friendsScript = document.createElement('script');
-friendsScript.src = `https://api.vk.com/method/friends.get?user_id=${userId}&access_token=${accessToken}&v=5.131&fields=photo_100,first_name,last_name&callback=handleFriendsResponse`;
-document.body.appendChild(friendsScript);
-
+function loadFriends(accessToken, userId) {
+  const script = document.createElement('script');
+  script.src = `https://api.vk.com/method/friends.get?user_id=${userId}&access_token=${accessToken}&v=5.131&fields=photo_100,first_name,last_name&callback=handleFriendsResponse`;
+  document.body.appendChild(script);
+}
