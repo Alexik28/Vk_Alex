@@ -1,6 +1,16 @@
-const accessToken = 'vk1.a.2yMBY5krnK-lDPnBsu1Ri_i7fE4nbVY94IVQEXQC08NARx8MfbWsabvaZRyiZl-Z_MRRGDw_7KUxZ4ZXeHVpuNH2VpYPK84AeROMPBKQe_1bS63NgtkR4zHw2o1psHSe9EvbiZogSA7l2Mlc0HpTBAdvsUwKAmjGEDnvxiaLBANHYew161uwFP1A6vAEnowYWESPtyTlc3UKMsAcCRJkUw';
-const userId = '354071026';
-let currentId = null;
+let accessToken = localStorage.getItem('accessToken');
+let userId=localStorage.getItem('userId'); 
+
+if(!accessToken|| !userId)
+{
+  console.log('Пользователь не авторизован.');
+}
+else
+{
+  console.log('Пользователь авторизовался', accessToken);
+  console.log('User ID:',userId);
+  loadUserInfo(accessToken, userId);
+}
 
 
 function handleResponse(response) {
@@ -165,16 +175,35 @@ function handleSendResponse(response) {
   }
 }
 
-document.getElementById('auth-button').addEventListener('click',function()
-{
-  const authUrl = 'https://oauth.vk.com/authorize?client_id=6287487&scope=1073737727&redirect_uri=https://oauth.vk.com/blank.html&display=page&response_type=token&revoke=1';
-  window.open(authUrl,'VK Auth', 'width=500,height=600');
+function extractTokenFromUrl(){
+  const hash=window.location.hash.substring(1);
+  const params=new URLSearchParams(hash);
+
+  const accessToken=params.get('access_token');
+  const userId=params.get('user_id');
+
+  if(accessToken&&userId)
+  {
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('userId', userId);
+    
+    loadUserInfo(accessToken, userId);
+  }
+}
+
+window.addEventListener('load',function(){
+  extractTokenFromUrl();
 });
 
 
 
 
 
+document.getElementById('auth-button').addEventListener('click',function()
+{
+  const authUrl = 'https://oauth.vk.com/authorize?client_id=6287487&scope=1073737727&redirect_uri=https://oauth.vk.com/blank.html&display=page&response_type=token&revoke=1';
+  window.open(authUrl,'VK Auth', 'width=500,height=600');
+});
 
 function sendMessageWithAttachment(peerId, attachmentString) {
   const script = document.createElement('script');
