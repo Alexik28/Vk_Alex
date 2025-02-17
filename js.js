@@ -165,63 +165,16 @@ function handleSendResponse(response) {
   }
 }
 
-
-function uploadFiles(files)
-{  
-  console.log(files);
-  if(!files||files.length===0)
-  {
-    console.error('нет файлов для загрузки');
-    return;
-  }
-  const formData=new FormData();
-  for(let i =0;i<files.length;i++)
-  {
-    formData.append('file', files[i]);
-  }
-  fetch('http://localhost:3000/upload', {
-    method: 'POST',
-    body: formData,
-  })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Ошибка сервера: ' + response.status);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.error) {
-            console.error('Ошибка от сервера:', data.error);
-            return;
-        }
-        console.log('Файл успешно загружен:', data);
-        const attachmentString = `doc${data.response[0].owner_id}_${data.response[0].id}`;
-        sendMessageWithAttachment(currentId, attachmentString);
-    })
-    .catch(error => console.error('Ошибка:', error));
-}
-
-
-
-document.getElementById('send-button').addEventListener('click',function(){
-  const messageInput=document.getElementById('message-input');
-  const message=messageInput.value.trim();
-  const fileInput=document.getElementById('file-input');
-  const files=fileInput.files;
-  if(!message&&files.length===0)
-  {
-    console.error('Нет данных для отправки')
-    return;
-  }
-  if(message)
-  {
-    sendTextMessage();
-  }
-  if(files.length>0)
-  {
-    uploadFiles(files);
-  }
+document.getElementById('auth-button').addEventListener('click',function()
+{
+  const authUrl = 'https://oauth.vk.com/authorize?client_id=6287487&scope=1073737727&redirect_uri=https://oauth.vk.com/blank.html&display=page&response_type=token&revoke=1';
+  window.open(authUrl,'VK Auth', 'width=500,height=600');
 });
+
+
+
+
+
 
 function sendMessageWithAttachment(peerId, attachmentString) {
   const script = document.createElement('script');
